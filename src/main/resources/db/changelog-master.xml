@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+            <include file="classpath:db/migration/changelog/employe/GradeEmploye.xml"/>
+        <include file="classpath:db/migration/changelog/ir/PaiementIrDetail.xml"/>
+        <include file="classpath:db/migration/changelog/ir/TauxIr.xml"/>
+        <include file="classpath:db/migration/changelog/avancement/Societe.xml"/>
+        <include file="classpath:db/migration/changelog/ir/PaiementIr.xml"/>
+        <include file="classpath:db/migration/changelog/commun/Redevable.xml"/>
+        <include file="classpath:db/migration/changelog/employe/EmployeSalaireHistory.xml"/>
+        <include file="classpath:db/migration/changelog/commun/Locale.xml"/>
+        <include file="classpath:db/migration/changelog/employe/Employe.xml"/>
+        <include file="classpath:db/migration/changelog/lotissement/TaxeLotissement.xml"/>
+        <include file="classpath:db/migration/changelog/lotissement/TauxTaxeLotissement.xml"/>
+
+</databaseChangeLog>
