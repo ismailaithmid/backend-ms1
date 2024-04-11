@@ -14,7 +14,7 @@ public class ModelPermissionUser   extends AuditBusinessObject     {
 
     private Long id;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(name = "`value`",columnDefinition = "boolean default false")
     private Boolean value = false;
     @Column(length = 500)
     private String subAttribute;

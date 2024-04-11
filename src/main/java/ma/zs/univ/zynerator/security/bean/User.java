@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @SequenceGenerator(name = "utilisateur_seq", sequenceName = "utilisateur_seq", allocationSize = 1, initialValue = 1)
 public class User  extends AuditBusinessObject  implements UserDetails {
@@ -36,9 +36,10 @@ public class User  extends AuditBusinessObject  implements UserDetails {
 
     @Transient
     protected Collection<GrantedAuthority> authorities;
-    @OneToMany(mappedBy = "user")
+    
+    @OneToMany(mappedBy = "user",cascade=CascadeType.PERSIST)
     protected List<ModelPermissionUser> modelPermissionUsers;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade=CascadeType.PERSIST)
     protected List<RoleUser> roleUsers;
 
 

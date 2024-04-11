@@ -27,6 +27,8 @@ public class EmployeSalaireHistory   extends AuditBusinessObject     {
 
     private Long id;
 
+
+    
     private Integer moisdepart = 0;
     private Integer moisFin = 0;
     private Integer anneeDepart = 0;

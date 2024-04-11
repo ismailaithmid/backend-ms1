@@ -10,10 +10,9 @@ import ma.zs.univ.zynerator.service.AbstractServiceImpl;
 import ma.zs.univ.zynerator.util.ListUtil;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-
-
-
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +26,20 @@ public class TauxIrAdminServiceImpl extends AbstractServiceImpl<TauxIr, TauxIrCr
 
 
 
+    @Override
+    public TauxIr findByDateAndSalaire(int month, int year, BigDecimal salaire) {
+        LocalDateTime dateMin = LocalDateTime.of(year, month, 1, 0, 0); // Start of the month
+        LocalDateTime dateMax = dateMin.plusMonths(1).minusSeconds(1); // End of the month
+
+        List<TauxIr> tauxIrList = dao.findByDateRangeAndSalaireRange(dateMin, dateMax, salaire);
 
 
-
-
-
-
+        if (!tauxIrList.isEmpty()) {
+            return tauxIrList.get(0);
+        } else {
+            return null;
+        }
+    }
 
 
     public void configure() {

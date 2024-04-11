@@ -10,6 +10,7 @@ import ma.zs.univ.zynerator.service.AbstractServiceImpl;
 import ma.zs.univ.zynerator.util.ListUtil;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 
@@ -24,6 +25,15 @@ import ma.zs.univ.service.facade.admin.avancement.SocieteAdminService ;
 import ma.zs.univ.bean.core.avancement.Societe ;
 import ma.zs.univ.service.facade.admin.ir.PaiementIrDetailAdminService ;
 import ma.zs.univ.bean.core.ir.PaiementIrDetail ;
+import ma.zs.univ.service.facade.admin.employe.EmployeAdminService;
+import ma.zs.univ.service.facade.admin.employe.EmployeSalaireHistoryAdminService;
+import ma.zs.univ.bean.core.avancement.Societe ;
+import ma.zs.univ.bean.core.employe.Employe;
+import ma.zs.univ.bean.core.employe.EmployeSalaireHistory;
+import ma.zs.univ.service.facade.admin.ir.PaiementIrDetailAdminService ;
+import ma.zs.univ.service.facade.admin.ir.TauxIrAdminService;
+import ma.zs.univ.bean.core.ir.PaiementIrDetail ;
+import ma.zs.univ.bean.core.ir.TauxIr;
 
 import java.util.List;
 @Service
@@ -32,6 +42,38 @@ public class PaiementIrAdminServiceImpl extends AbstractServiceImpl<PaiementIr, 
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
     public PaiementIr create(PaiementIr t) {
+        // me
+        Societe s = t.getSociete();
+        Integer month = t.getMonth();
+        Integer year = t.getYear();
+        BigDecimal totalCotisationPatronal = t.getTotalCotisationPatronal();
+        BigDecimal totalCotisationSalarial = t.getTotalCotisationSalarial();
+        List<Employe> employes = employeAdminService.findBySocieteId(s.getId());
+        for(Employe emp: employes){
+            List<EmployeSalaireHistory> historySalire = employeSalaireHistoryAdminService.findByEmployeId(emp.getId());
+            BigDecimal salaire = historySalire.stream()
+            .filter(e -> year >= e.getAnneeDepart() && year <= e.getAnneeFin() &&
+                         month >= e.getMoisdepart() && month <= e.getMoisFin())
+            .findFirst()
+            .map(EmployeSalaireHistory::getSalaireBrute)
+            .orElse(BigDecimal.ZERO);            
+            BigDecimal tauxIr = tauxIrAdminService.findByDateAndSalaire(month,year,salaire).getPourcentage();
+            PaiementIrDetail pd = new PaiementIrDetail();
+            BigDecimal cotisationSalarial = tauxIr.multiply(BigDecimal.valueOf(0.6));
+            BigDecimal cotisationPatronal = tauxIr.multiply(BigDecimal.valueOf(0.4));
+            totalCotisationPatronal.add(cotisationPatronal);
+            totalCotisationSalarial.add(cotisationSalarial);
+            pd.setEmploye(emp);
+            pd.setPaiementIr(t);
+            pd.setSalaireBrute(salaire);
+            pd.setSalaireNet(salaire.subtract(cotisationSalarial));
+            pd.setCotisationpatronel(cotisationPatronal);
+            pd.setCotoisationsalarial(cotisationSalarial);
+            paiementIrDetailService.create(pd);
+
+        }
+        t.setTotalCotisationPatronal(totalCotisationPatronal);
+        t.setTotalCotisationSalarial(totalCotisationSalarial);
         PaiementIr saved= super.create(t);
         if (saved != null && t.getPaiementIrDetails() != null) {
                 t.getPaiementIrDetails().forEach(element-> {
@@ -98,6 +140,13 @@ public class PaiementIrAdminServiceImpl extends AbstractServiceImpl<PaiementIr, 
     private SocieteAdminService societeService ;
     @Autowired
     private PaiementIrDetailAdminService paiementIrDetailService ;
+    @Autowired
+    private EmployeAdminService employeAdminService ;
+    @Autowired
+    private TauxIrAdminService tauxIrAdminService ;
+
+    @Autowired
+    private EmployeSalaireHistoryAdminService employeSalaireHistoryAdminService;
 
     public PaiementIrAdminServiceImpl(PaiementIrDao dao) {
         super(dao);
