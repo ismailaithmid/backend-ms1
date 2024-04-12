@@ -61,8 +61,8 @@ public class PaiementIrAdminServiceImpl extends AbstractServiceImpl<PaiementIr, 
             PaiementIrDetail pd = new PaiementIrDetail();
             BigDecimal cotisationSalarial = tauxIr.multiply(BigDecimal.valueOf(0.6));
             BigDecimal cotisationPatronal = tauxIr.multiply(BigDecimal.valueOf(0.4));
-            totalCotisationPatronal.add(cotisationPatronal);
-            totalCotisationSalarial.add(cotisationSalarial);
+            totalCotisationPatronal = totalCotisationPatronal.add(cotisationPatronal);
+            totalCotisationSalarial = totalCotisationSalarial.add(cotisationSalarial);
             pd.setEmploye(emp);
             pd.setPaiementIr(t);
             pd.setSalaireBrute(salaire);
