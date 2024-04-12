@@ -18,10 +18,9 @@ public interface TauxIrDao extends AbstractRepository<TauxIr,Long>  {
 
 
 
-    @Query("SELECT t FROM TauxIr t WHERE t.dateMin >= :dateMin AND t.dateMax <= :dateMax AND t.salaireMin <= :salaire AND t.salaireMax >= :salaire")
+    @Query("SELECT t FROM TauxIr t WHERE t.dateMax >= :date AND t.dateMin <= :date AND t.salaireMin <= :salaire AND t.salaireMax >= :salaire")
     List<TauxIr> findByDateRangeAndSalaireRange(
-        @Param("dateMin") LocalDateTime dateMin,
-        @Param("dateMax") LocalDateTime dateMax,
+        @Param("date") LocalDateTime date,
         @Param("salaire") BigDecimal salaire
     );
 }
