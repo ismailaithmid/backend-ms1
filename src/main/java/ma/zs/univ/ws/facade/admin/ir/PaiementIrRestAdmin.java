@@ -57,7 +57,7 @@ public class PaiementIrRestAdmin  extends AbstractController<PaiementIr, Paiemen
     @Operation(summary = "Saves the specified  paiementIr")
     @PostMapping("")
     public ResponseEntity<PaiementIrDto> save(@RequestBody PaiementIrDto dto) throws Exception {
-        return super.save(dto);
+        return super.save(converter.toDto(service.create(converter.toItem(dto))));
     }
 
     @Operation(summary = "Updates the specified  paiementIr")
