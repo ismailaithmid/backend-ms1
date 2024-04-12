@@ -28,10 +28,9 @@ public class TauxIrAdminServiceImpl extends AbstractServiceImpl<TauxIr, TauxIrCr
 
     @Override
     public TauxIr findByDateAndSalaire(int month, int year, BigDecimal salaire) {
-        LocalDateTime dateMin = LocalDateTime.of(year, month, 1, 0, 0); // Start of the month
-        LocalDateTime dateMax = dateMin.plusMonths(1).minusSeconds(1); // End of the month
+        LocalDateTime date = LocalDateTime.of(year, month, 1, 0, 0); // Start of the month
 
-        List<TauxIr> tauxIrList = dao.findByDateRangeAndSalaireRange(dateMin, dateMax, salaire);
+        List<TauxIr> tauxIrList = dao.findByDateRangeAndSalaireRange(date, salaire);
 
 
         if (!tauxIrList.isEmpty()) {
